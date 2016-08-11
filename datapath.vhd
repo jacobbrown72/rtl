@@ -40,15 +40,13 @@ end datapath;
 
 architecture struct of datapath is
 	
-	component irrom
+	component rom
 		port(
-			aclr			: IN STD_LOGIC;
-			address_a	: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
-			address_b	: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
-			clock			: IN STD_LOGIC;
-			enable		: IN STD_LOGIC;
-			q_a			: OUT STD_LOGIC_VECTOR (15 DOWNTO 0);
-			q_b			: OUT STD_LOGIC_VECTOR (15 DOWNTO 0)
+			clk : in std_logic;
+			addra : in std_logic_vector(15 downto 0);
+			addrb : in std_logic_vector(15 downto 0);
+			qa : out std_logic_vector(15 downto 0);
+			qb : out std_logic_vector(15 downto 0)
 		);
 	end component;
 	
@@ -146,13 +144,11 @@ architecture struct of datapath is
 	
 	component ram
 		port(
-			aclr		: IN STD_LOGIC;	
-			address	: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
-			clken		: IN STD_LOGIC;
-			clock		: IN STD_LOGIC ;
-			data		: IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-			wren		: IN STD_LOGIC ;
-			q			: OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
+		  clk   : in  std_logic;
+		  we    : in  std_logic;
+		  data  : in  std_logic_vector(7 downto 0);
+		  addr  : in  std_logic_vector(15 downto 0);
+		  q     : out std_logic_vector(7 downto 0)
 		);
 	end component;
 	
@@ -204,15 +200,13 @@ begin
 		);
 	
 	address_b <= '0'&ind_addr(15 downto 1);
-	U2_IRROM : irrom
+	U2_ROM : rom
 		port map(
-			aclr => '0',
-			address_a => ir_addr,
-			address_b => address_b,
-			clock => clk,
-			enable => rom_enable,
-			q_a => inst_data,
-			q_b => rom_dataw
+		  clk => clk,
+			addra => ir_addr,
+			addrb => address_b,
+			qa => inst_data,
+			qb => rom_dataw
 		);
 		
 	U3_PROC : process(ind_addr(0), rom_dataw)
@@ -375,12 +369,10 @@ begin
 		
 	U14_RAM : ram	
 		port map(
-			aclr => rst,
-			address => ram_addr,
-			clken => ram_enable,
-			clock => clk,
+		  clk => clk,
+		  we => ram_wen,
 			data => dbus,
-			wren => ram_wen,
+			addr => ram_addr,
 			q => ram_data
 		);
 		

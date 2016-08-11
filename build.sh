@@ -16,6 +16,7 @@ vcom spreg.vhd
 vcom regsel.vhd
 vcom iobus.vhd
 vcom databus.vhd
+vcom regfile.vhd
 vcom rom.vhd
 vcom ram.vhd
 vcom datapath.vhd
