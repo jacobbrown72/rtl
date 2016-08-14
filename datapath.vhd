@@ -20,8 +20,6 @@ entity datapath is
 		io_wen		: in  std_logic;
 		sp_en			: in  std_logic;
 		rom_enable	: in  std_logic;
-		ram_enable	: in  std_logic;
-		ram_wen		: in  std_logic;
 		--mux select signals
 		pc_sel		: in  std_logic_vector(1 downto 0);
 		byte_sel		: in  std_logic;

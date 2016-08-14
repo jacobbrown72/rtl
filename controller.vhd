@@ -23,8 +23,6 @@ entity controller is
 		c_en			: out std_logic;
 		io_wen		: out std_logic;
 		sp_en			: out std_logic;
-		rom_enable	: out std_logic;
-		ram_enable	: out std_logic;
 		ram_wen		: out std_logic;
 		--mux select signals
 		pc_sel		: out std_logic_vector(1 downto 0);
@@ -71,8 +69,6 @@ begin
 		c_en	<= '0';
 		io_wen <= '0';
 		sp_en	<= '0';
-		rom_enable <= '0';
-		ram_enable <= '0';
 		ram_wen	<= '0';
 		pc_sel <= "00"	;
 		byte_sel	<= '0';
@@ -86,7 +82,6 @@ begin
 		
 		case state is
 			when rom_load =>
-				rom_enable <= '1';
 				nstate <= ir_load;
 				
 			when ir_load =>
@@ -601,7 +596,6 @@ begin
 				raddr_sel <= "10";
 				bus_sel <= "0100";
 				ram_wen <= '1';
-				ram_enable <= '1';
 				sp_sel <= '1';
 				sp_en <= '1';
 				pc_en <= '1';
@@ -615,7 +609,6 @@ begin
 			when pop1 =>
 				raddr_sel <= "10";
 				ram_wen <= '0';
-				ram_enable <= '1';
 				nstate <= pop2;
 				
 			when pop2 =>
@@ -654,13 +647,11 @@ begin
 				nstate <= lds1;
 				
 			when lds1 =>
-				rom_enable <= '1';
 				nstate <= lds2;
 				
 			when lds2 =>
 				raddr_sel <= "00";
 				ram_wen <= '0';
-				ram_enable <= '1';
 				nstate <= lds3;
 				
 			when lds3 =>
@@ -672,7 +663,6 @@ begin
 			when ld =>
 				raddr_sel <= "01";
 				ram_wen <= '0';
-				ram_enable <= '1';
 				nstate <= ld1;
 				
 			when ld1 =>
@@ -682,7 +672,6 @@ begin
 				nstate <= rom_load;
 			
 			when lpm =>
-				rom_enable <= '1';
 				nstate <= lpm1;
 				
 			when lpm1 =>
@@ -696,14 +685,12 @@ begin
 				nstate <= sts1;
 				
 			when sts1 =>
-				rom_enable <= '1';
 				nstate <= sts2;
 				
 			when sts2 =>
 				raddr_sel <= "00";
 				ram_wen <= '1';
 				bus_sel <= "0100";
-				ram_enable <= '1';
 				pc_en <= '1';
 				nstate <= rom_load;
 			
@@ -711,7 +698,6 @@ begin
 				raddr_sel <= "01";
 				ram_wen <= '1';
 				bus_sel <= "0100";
-				ram_enable <= '1';
 				pc_en <= '1';
 				nstate <= rom_load;
 			
@@ -754,7 +740,6 @@ begin
 				end if;
 				
 			when br1 =>
-				rom_enable <= '1';
 				nstate <= br2;
 			
 			when br2 =>
@@ -767,7 +752,6 @@ begin
 				nstate <= call1;
 				
 			when call1 =>
-				rom_enable <= '1';
 				pc_en <= '1';
 				nstate <= call2;
 			
@@ -776,7 +760,6 @@ begin
 				raddr_sel <= "10";
 				bus_sel <= "0110";
 				ram_wen <= '1';
-				ram_enable <= '1';
 				sp_sel <= '1';
 				sp_en <= '1';
 				nstate <= call3;
@@ -786,7 +769,6 @@ begin
 				bus_sel <= "0110";
 				raddr_sel <= "10";
 				ram_wen <= '1';
-				ram_enable <= '1';
 				sp_sel <= '1';
 				sp_en <= '1';
 				nstate <= call4;
@@ -804,7 +786,6 @@ begin
 			when ret1 =>
 				raddr_sel <= "10";
 				ram_wen <= '0';
-				ram_enable <= '1';
 				sp_sel <= '0';
 				sp_en <= '1';
 				nstate <= ret2;
@@ -812,7 +793,6 @@ begin
 			when ret2 =>
 				raddr_sel <= "10";
 				ram_wen <= '0';
-				ram_enable <= '1';
 				bus_sel <= "0001";
 				pch_en <= '1';
 				nstate <= ret3;
